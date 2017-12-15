@@ -6,6 +6,7 @@ from os.path import basename
 import glob 
 from copy import deepcopy
 import re
+import numpy as np
 
 DICOAA = {
     'GLU':'E',
@@ -39,9 +40,9 @@ class Protein:
 
     def __init__(self, filePath):
         fileName, fileExtension = os.path.splitext(filePath)
-        if(fileExtension!='.pdb'):
-            print("Erreur extention .pdb")
-            exit(1)
+        #if(fileExtension!='.pdb'):
+        #    print("Erreur extention .pdb")
+        #    exit(1)
         self.path = filePath
         self.id = basename(fileName)
         self.pathTmp = "../tmp/tmp_"+self.id+".pdb"
@@ -53,12 +54,16 @@ class Protein:
         Uniquement la chaine A'''
         try:
             with open(filePath, 'r') as fichier:
+                coordtmp = []
                 for ligne in fichier:
                     key = ligne[0:6].strip()
-                    if key in ['ATOM','TER','END']:
+                    if key == 'ATOM':
                         self.pdb.append(ligne)
+                        coordtmp.append([float(ligne[30:38]),float(ligne[38:46]),float(ligne[46:54])])
                     if key in ['TER','END']:
+                        self.pdb.append(ligne)
                         break
+                self.coord = np.asarray(coordtmp)
         except IOError as erreur:
             print(erreur)
             exit(1)
@@ -80,25 +85,29 @@ class Protein:
         with open("../tmp/tmp_"+self.id+".pdb","w") as fOut:
             fOut.write(self.get_pdb())
 
+    def rotate(self, matrix):
+        newCoord = np.zeros(self.coord.shape)
+        newCoord[:,0]=matrix[0,0]+matrix[0,1]*self.coord[:,0]+matrix[0,2]*self.coord[:,1]+matrix[0,3]*self.coord[:,2]
+        newCoord[:,1]=matrix[1,0]+matrix[1,1]*self.coord[:,0]+matrix[1,2]*self.coord[:,1]+matrix[1,3]*self.coord[:,2]
+        newCoord[:,2]=matrix[2,0]+matrix[2,1]*self.coord[:,0]+matrix[2,2]*self.coord[:,1]+matrix[2,3]*self.coord[:,2]
+        self.coord = deepcopy(newCoord)
 
 class Alignement:
-    num = -1
-    UP = (-1,-1) #start et end
-    length = 0
-
+    #num = -1
+    #UP = (-1,-1) #start et end
 
     def __init__(self, outAlign, i):
-        self.num = i
+        #self.num = i
         self.list_alignedA = []
         self.list_alignedB = []
         lignes = outAlign.split('\n')
-        self.length = int(lignes[16].split(',')[0].split('=')[-1])
-        res = re.search("in_PU"+str(i)+"_(?P<start>\d+)-(?P<end>\d+)",lignes[11])
-        if res is not None:
-            self.UP = int(res.group('start')),int(res.group('end'))
-        else:
-            print("erreur sortie tm-align")
-            exit()
+        #self.length = int(lignes[16].split(',')[0].split('=')[-1])
+        #res = re.search("in_PU"+str(i)+"_(?P<start>\d+)-(?P<end>\d+)",lignes[11])
+        #if res is not None:
+        #    self.UP = int(res.group('start')),int(res.group('end'))
+        #else:
+        #    print("erreur sortie tm-align")
+        #    exit()
 
         seqA = list(lignes[22])
         motif = list(lignes[23])
@@ -143,8 +152,13 @@ def recup_pdb_pu(id, i):
     file2 = [fichier for fichier in file1 if(basename(fichier).startswith('in_PU'+str(i)) and not basename(fichier).endswith('.png'))]
     return file2
 
-
-
+def import_matrix(fileMatrix):
+    with open(fileMatrix) as fMat:
+        matrix = np.zeros((3,4))
+        for ligne in fMat:
+            if ligne.startswith(' 1') or ligne.startswith(' 2') or ligne.startswith(' 3'):
+                matrix[int(ligne.split()[0])-1,:] = float(ligne.split()[1]),float(ligne.split()[2]),float(ligne.split()[3]),float(ligne.split()[4])
+    return deepcopy(matrix)
 
 if __name__ == '__main__':
     protB = Protein("../data/1e0s.pdb")
@@ -169,19 +183,22 @@ if __name__ == '__main__':
             break
 
         for pu in listePU:
-            sortie = os.popen("TMalign {} {}".format(pu,protBtmp.pathTmp), "r").read()
+
+            sortie = os.popen("TMalign {} {} -m ../tmp/matrix.txt".format(pu,protBtmp.pathTmp), "r").read()
             print(sortie)
             a = Alignement(sortie, i)
-
+            matRot = import_matrix("../tmp/matrix.txt")
             print("-------------------------------------")
-            print(a.num)
-            print(a.UP)
             print(a.list_alignedA)
             print(a.list_alignedB)
             print("-------------------------------------")
+
+            puTmp = Protein(pu)
+            puTmp.rotate(matRot)
             protBtmp.pdb = remove_aligned(protBtmp.pdb, a.list_alignedB)
-            #protA.write_pdbtmp()
+
             protBtmp.write_pdbtmp()
+
         i+=1
 
 
