@@ -34,11 +34,12 @@ DICOAA = {
 class Protein:
     id = ''
     path = ''
-    pdb = []
-    pdbTmp = []
+
     seq = ""
 
     def __init__(self, filePath):
+        self.pdb = []
+        pdbTmp = []
         fileName, fileExtension = os.path.splitext(filePath)
         #if(fileExtension!='.pdb'):
         #    print("Erreur extention .pdb")
@@ -130,7 +131,7 @@ class Alignement:
                     self.list_alignedA += range(sA,eA+1)
                     self.list_alignedB += range(sB,eB+1)
             i += length
-
+        self.long = len(self.list_alignedA)
 
 def remove_aligned(atom, aligned):
     pdbtmp = []
@@ -160,12 +161,53 @@ def import_matrix(fileMatrix):
                 matrix[int(ligne.split()[0])-1,:] = float(ligne.split()[1]),float(ligne.split()[2]),float(ligne.split()[3]),float(ligne.split()[4])
     return deepcopy(matrix)
 
+
+def sumTermeTM(protA, protB, align):
+    i = 0
+
+    lTargetA = len(protA.seq)
+    lTargetB = len(protB.seq)
+
+    sumTmA = 0
+    sumTmB = 0
+
+    d0A = 1.24*(lTargetA-15)**(1/3)-1.8
+    d0B = 1.24*(lTargetB-15)**(1/3)-1.8
+    
+    caA = get_coordCA(protA.pdb,protA.coord, align.list_alignedA)
+    caB = get_coordCA(protB.pdb,protB.coord, align.list_alignedB)
+
+    while(i < align.long):
+        dist = dist3D(caA[i,:], caB[i,:])
+        print(dist)
+        sumTmA += 1/(1+(dist/d0A)**2) 
+        sumTmB += 1/(1+(dist/d0B)**2) 
+
+        i += 1
+    return sumTmA, sumTmB
+
+def tm_score(somme, l):
+    return(somme/l)
+
+def get_coordCA(pdb,coord, res):
+    i = 1
+    ca = []
+    cp = 0
+    for inx, ligne in enumerate(pdb):
+        if ligne[0:4] == 'ATOM' and ligne[12:16].strip() == 'CA':
+            if(i in res):
+                cp +=1
+                ca.append(coord[inx])
+            i += 1
+    return deepcopy(np.asarray(ca))
+
+def dist3D(coord1, coord2):
+    return(np.linalg.norm(coord1-coord2))
+
 if __name__ == '__main__':
     protB = Protein("../data/1e0s.pdb")
     protA = Protein("../data/2j5x.pdb")
     #protA.write_pdbtmp()
-    
-    
 
     #Creer les rep pour stocker les fichiers de peeling
     #os.system("mkdir ../results/"+protA.id)
@@ -182,23 +224,34 @@ if __name__ == '__main__':
             #liste vide si true
             break
 
+        (sumTmA, sumTmB) = (0,0)
         for pu in listePU:
 
             sortie = os.popen("TMalign {} {} -m ../tmp/matrix.txt".format(pu,protBtmp.pathTmp), "r").read()
             print(sortie)
             a = Alignement(sortie, i)
             matRot = import_matrix("../tmp/matrix.txt")
-            print("-------------------------------------")
-            print(a.list_alignedA)
-            print(a.list_alignedB)
-            print("-------------------------------------")
+            #print("-------------------------------------")
+            #print(a.list_alignedA)
+            #print(a.list_alignedB)
+            #print("-------------------------------------")
 
             puTmp = Protein(pu)
             puTmp.rotate(matRot)
-            protBtmp.pdb = remove_aligned(protBtmp.pdb, a.list_alignedB)
 
+            #addition element par element de tuple
+            (sumTmA, sumTmB) = map(lambda x,y: x+y,(sumTmA, sumTmB),sumTermeTM(puTmp, protB, a))
+
+
+            protBtmp.pdb = remove_aligned(protBtmp.pdb, a.list_alignedB)
             protBtmp.write_pdbtmp()
 
+        print("\n-------------------------------------\n")
+        TMscoreA = tm_score(sumTmA, len(protA.seq))
+        TMscoreB = tm_score(sumTmB, len(protB.seq))
+        print("level = "+str(i))
+        print("TMscoreA = "+str(TMscoreA))
+        print("TMscoreB= "+str(TMscoreB))
         i+=1
 
 
