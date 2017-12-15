@@ -40,6 +40,8 @@ class Protein:
     def __init__(self, filePath):
         self.pdb = []
         pdbTmp = []
+        self.coord = None
+        coordtmp = []
         fileName, fileExtension = os.path.splitext(filePath)
         #if(fileExtension!='.pdb'):
         #    print("Erreur extention .pdb")
@@ -93,6 +95,24 @@ class Protein:
         newCoord[:,2]=matrix[2,0]+matrix[2,1]*self.coord[:,0]+matrix[2,2]*self.coord[:,1]+matrix[2,3]*self.coord[:,2]
         self.coord = deepcopy(newCoord)
 
+    def remove_aligned(self, aligned):
+        #ajout de remove sur coord aussi
+        pdbtmp = []
+        coordtmp = []
+        i = 0
+        numResPrec = -1
+        for ind, ligne in enumerate(self.pdb):
+            numRes = int(ligne[22:26])
+            if(numRes != numResPrec):
+                i+=1
+            if i not in aligned:
+                pdbtmp.append(ligne)
+                if ligne[0:4] == 'ATOM':
+                    coordtmp.append(self.coord[ind])
+            numResPrec = numRes
+        self.pdb = deepcopy(pdbtmp)
+        self.coord = deepcopy(np.asarray(coordtmp))
+
 class Alignement:
     #num = -1
     #UP = (-1,-1) #start et end
@@ -132,19 +152,7 @@ class Alignement:
                     self.list_alignedB += range(sB,eB+1)
             i += length
         self.long = len(self.list_alignedA)
-
-def remove_aligned(atom, aligned):
-    pdbtmp = []
-    i = 0
-    numResPrec = -1
-    for ligne in atom:
-        numRes = int(ligne[22:26])
-        if(numRes != numResPrec):
-            i+=1
-        if i not in aligned:
-            pdbtmp.append(ligne)
-        numResPrec = numRes
-    return pdbtmp
+        #print(self.long)
 
 
 
@@ -171,15 +179,15 @@ def sumTermeTM(protA, protB, align):
     sumTmA = 0
     sumTmB = 0
 
-    d0A = 1.24*(lTargetA-15)**(1/3)-1.8
-    d0B = 1.24*(lTargetB-15)**(1/3)-1.8
+    d0A = 1.24*(lTargetA-15)**(1.0/3)-1.8
+    d0B = 1.24*(lTargetB-15)**(1.0/3)-1.8
     
     caA = get_coordCA(protA.pdb,protA.coord, align.list_alignedA)
     caB = get_coordCA(protB.pdb,protB.coord, align.list_alignedB)
 
     while(i < align.long):
         dist = dist3D(caA[i,:], caB[i,:])
-        print(dist)
+        #print(dist)
         sumTmA += 1/(1+(dist/d0A)**2) 
         sumTmB += 1/(1+(dist/d0B)**2) 
 
@@ -204,11 +212,12 @@ def get_coordCA(pdb,coord, res):
 def dist3D(coord1, coord2):
     return(np.linalg.norm(coord1-coord2))
 
-if __name__ == '__main__':
-    protB = Protein("../data/1e0s.pdb")
-    protA = Protein("../data/2j5x.pdb")
-    #protA.write_pdbtmp()
+def upalign(fileA, fileB):
 
+    protB = Protein(fileA)
+    protA = Protein(fileB)
+    #print(len(protA.seq))
+    #print(len(protB.seq))
     #Creer les rep pour stocker les fichiers de peeling
     #os.system("mkdir ../results/"+protA.id)
     #os.system("mkdir ../results/"+protB.id)
@@ -216,10 +225,12 @@ if __name__ == '__main__':
     limite = 10 #securité while
 
     while(i<limite):
-        protB.write_pdbtmp()
         protBtmp = deepcopy(protB)
+        protBtmp.write_pdbtmp()
+        
 
         listePU = recup_pdb_pu(protA.id, i)
+
         if(not listePU):
             #liste vide si true
             break
@@ -229,8 +240,11 @@ if __name__ == '__main__':
 
             sortie = os.popen("TMalign {} {} -m ../tmp/matrix.txt".format(pu,protBtmp.pathTmp), "r").read()
             print(sortie)
+
             a = Alignement(sortie, i)
+
             matRot = import_matrix("../tmp/matrix.txt")
+            #print(matRot)
             #print("-------------------------------------")
             #print(a.list_alignedA)
             #print(a.list_alignedB)
@@ -238,12 +252,13 @@ if __name__ == '__main__':
 
             puTmp = Protein(pu)
             puTmp.rotate(matRot)
-
+            #print(puTmp.coord[a.list_alignedA,:])
+            #print(protBtmp.coord[a.list_alignedB,:])
             #addition element par element de tuple
-            (sumTmA, sumTmB) = map(lambda x,y: x+y,(sumTmA, sumTmB),sumTermeTM(puTmp, protB, a))
+            (sumTmA, sumTmB) = map(lambda x,y: x+y,(sumTmA, sumTmB),sumTermeTM(puTmp, protBtmp, a))
+            #print(sumTmA, sumTmB)
 
-
-            protBtmp.pdb = remove_aligned(protBtmp.pdb, a.list_alignedB)
+            protBtmp.remove_aligned(a.list_alignedB)
             protBtmp.write_pdbtmp()
 
         print("\n-------------------------------------\n")
@@ -254,6 +269,13 @@ if __name__ == '__main__':
         print("TMscoreB= "+str(TMscoreB))
         i+=1
 
+if __name__ == '__main__':
+
+    
+    upalign("../data/1e0s.pdb", "../data/2j5x.pdb")
+    upalign("../data/2j5x.pdb", "../data/1e0s.pdb")
+
+    
 
 
 
