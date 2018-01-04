@@ -1,0 +1,1 @@
+./src/upalign.py "./data/1cdn.pdb" "./data/1clb.pdb"

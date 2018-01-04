@@ -7,277 +7,85 @@ import glob
 from copy import deepcopy
 import re
 import numpy as np
-
-DICOAA = {
-    'GLU':'E',
-    'ASP':'D',
-    'ALA':'A',
-    'ARG':'R',
-    'ASN':'N',
-    'CYS':'C',
-    'GLN':'Q',
-    'GLY':'G',
-    'HIS':'H',
-    'ILE':'I',
-    'LEU':'L',
-    'LYS':'K',
-    'MET':'M',
-    'PHE':'F',
-    'PRO':'P',
-    'SER':'S',
-    'THR':'T',
-    'TRP':'W',
-    'TYR':'Y',
-    'VAL':'V'
-}
-
-class Protein:
-    id = ''
-    path = ''
-
-    seq = ""
-
-    def __init__(self, filePath):
-        self.pdb = []
-        pdbTmp = []
-        self.coord = None
-        coordtmp = []
-        fileName, fileExtension = os.path.splitext(filePath)
-        #if(fileExtension!='.pdb'):
-        #    print("Erreur extention .pdb")
-        #    exit(1)
-        self.path = filePath
-        self.id = basename(fileName)
-        self.pathTmp = "../tmp/tmp_"+self.id+".pdb"
-        self.import_pdb(filePath)
-        self.read_seq()
-
-    def import_pdb(self, filePath):
-        '''Charge le fichier PDB en mémoire, ne conserve que les lignes ATOM, TER et END.
-        Uniquement la chaine A'''
-        try:
-            with open(filePath, 'r') as fichier:
-                coordtmp = []
-                for ligne in fichier:
-                    key = ligne[0:6].strip()
-                    if key == 'ATOM':
-                        self.pdb.append(ligne)
-                        coordtmp.append([float(ligne[30:38]),float(ligne[38:46]),float(ligne[46:54])])
-                    if key in ['TER','END']:
-                        self.pdb.append(ligne)
-                        break
-                self.coord = np.asarray(coordtmp)
-        except IOError as erreur:
-            print(erreur)
-            exit(1)
-
-    def read_seq(self):
-        #Ne lit que la chaine A pour le moment.
-        numRes = 0
-        for ligne in self.pdb:
-            if ligne[0:3] == 'TER':
-                break
-            if ligne[0:4] == 'ATOM' and int(ligne[22:26]) != numRes:
-                numRes = int(ligne[22:26])
-                self.seq += DICOAA[ligne[17:20]]
-
-    def get_pdb(self):
-        return "".join(self.pdb)
-
-    def write_pdbtmp(self):
-        with open("../tmp/tmp_"+self.id+".pdb","w") as fOut:
-            fOut.write(self.get_pdb())
-
-    def rotate(self, matrix):
-        newCoord = np.zeros(self.coord.shape)
-        newCoord[:,0]=matrix[0,0]+matrix[0,1]*self.coord[:,0]+matrix[0,2]*self.coord[:,1]+matrix[0,3]*self.coord[:,2]
-        newCoord[:,1]=matrix[1,0]+matrix[1,1]*self.coord[:,0]+matrix[1,2]*self.coord[:,1]+matrix[1,3]*self.coord[:,2]
-        newCoord[:,2]=matrix[2,0]+matrix[2,1]*self.coord[:,0]+matrix[2,2]*self.coord[:,1]+matrix[2,3]*self.coord[:,2]
-        self.coord = deepcopy(newCoord)
-
-    def remove_aligned(self, aligned):
-        #ajout de remove sur coord aussi
-        pdbtmp = []
-        coordtmp = []
-        i = 0
-        numResPrec = -1
-        for ind, ligne in enumerate(self.pdb):
-            numRes = int(ligne[22:26])
-            if(numRes != numResPrec):
-                i+=1
-            if i not in aligned:
-                pdbtmp.append(ligne)
-                if ligne[0:4] == 'ATOM':
-                    coordtmp.append(self.coord[ind])
-            numResPrec = numRes
-        self.pdb = deepcopy(pdbtmp)
-        self.coord = deepcopy(np.asarray(coordtmp))
-
-class Alignement:
-    #num = -1
-    #UP = (-1,-1) #start et end
-
-    def __init__(self, outAlign, i):
-        #self.num = i
-        self.list_alignedA = []
-        self.list_alignedB = []
-        lignes = outAlign.split('\n')
-        #self.length = int(lignes[16].split(',')[0].split('=')[-1])
-        #res = re.search("in_PU"+str(i)+"_(?P<start>\d+)-(?P<end>\d+)",lignes[11])
-        #if res is not None:
-        #    self.UP = int(res.group('start')),int(res.group('end'))
-        #else:
-        #    print("erreur sortie tm-align")
-        #    exit()
-
-        seqA = list(lignes[22])
-        motif = list(lignes[23])
-        seqB = list(lignes[24])
-
-        tailleMin = 6
-        i = 0
-        lim = len(motif)
-        while i < lim:
-            length = 1
-            if motif[i] in ['.',':']:
-                sA = len(seqA[:i+1])-seqA[:i+1].count('-')
-                #+self.UP[0]-1
-                sB = len(seqB[:i+1])-seqB[:i+1].count('-')
-                while(i+length < lim and motif[i+length] in ['.',':']):
-                    length+=1
-                eA = sA + length - 1
-                eB = sB + length - 1
-                if(length > tailleMin):
-                    self.list_alignedA += range(sA,eA+1)
-                    self.list_alignedB += range(sB,eB+1)
-            i += length
-        self.long = len(self.list_alignedA)
-        #print(self.long)
-
-
-
-def recup_pdb_pu(id, i):
-    file1 = glob.glob('../results/{}/*'.format(id))
-    file2 = [fichier for fichier in file1 if(basename(fichier).startswith('in_PU'+str(i)) and not basename(fichier).endswith('.png'))]
-    return file2
-
-def import_matrix(fileMatrix):
-    with open(fileMatrix) as fMat:
-        matrix = np.zeros((3,4))
-        for ligne in fMat:
-            if ligne.startswith(' 1') or ligne.startswith(' 2') or ligne.startswith(' 3'):
-                matrix[int(ligne.split()[0])-1,:] = float(ligne.split()[1]),float(ligne.split()[2]),float(ligne.split()[3]),float(ligne.split()[4])
-    return deepcopy(matrix)
-
-
-def sumTermeTM(protA, protB, align):
-    i = 0
-
-    lTargetA = len(protA.seq)
-    lTargetB = len(protB.seq)
-
-    sumTmA = 0
-    sumTmB = 0
-
-    d0A = 1.24*(lTargetA-15)**(1.0/3)-1.8
-    d0B = 1.24*(lTargetB-15)**(1.0/3)-1.8
-    
-    caA = get_coordCA(protA.pdb,protA.coord, align.list_alignedA)
-    caB = get_coordCA(protB.pdb,protB.coord, align.list_alignedB)
-
-    while(i < align.long):
-        dist = dist3D(caA[i,:], caB[i,:])
-        #print(dist)
-        sumTmA += 1/(1+(dist/d0A)**2) 
-        sumTmB += 1/(1+(dist/d0B)**2) 
-
-        i += 1
-    return sumTmA, sumTmB
-
-def tm_score(somme, l):
-    return(somme/l)
-
-def get_coordCA(pdb,coord, res):
-    i = 1
-    ca = []
-    cp = 0
-    for inx, ligne in enumerate(pdb):
-        if ligne[0:4] == 'ATOM' and ligne[12:16].strip() == 'CA':
-            if(i in res):
-                cp +=1
-                ca.append(coord[inx])
-            i += 1
-    return deepcopy(np.asarray(ca))
-
-def dist3D(coord1, coord2):
-    return(np.linalg.norm(coord1-coord2))
+from time import gmtime, strftime
+import sys
+import logging
+from tools import *
 
 def upalign(fileA, fileB):
 
-    protB = Protein(fileA)
-    protA = Protein(fileB)
-    #print(len(protA.seq))
-    #print(len(protB.seq))
+    protB = Protein(fileB)
+    protA = Protein(fileA)
+
     #Creer les rep pour stocker les fichiers de peeling
-    #os.system("mkdir ../results/"+protA.id)
-    #os.system("mkdir ../results/"+protB.id)
+    #os.system("mkdir ./results/"+protA.id)
+    #os.system("mkdir ./results/"+protB.id)
     i = 0
     limite = 10 #securité while
 
+    outPath = "./results/"+strftime("%H%M%S", gmtime())+protA.id+protB.id+"/"
+    os.system("mkdir "+outPath)
+    logging.basicConfig(filename=outPath+'output.log',level=logging.DEBUG)
+
+    #TM-score initial
+    sortie = os.popen("TMalign {} {}".format(fileA,fileB), "r").readlines()
+    file_plot_score(0, float(sortie[17][9:17]), float(sortie[17][9:17]), outPath)
+
     while(i<limite):
-        protBtmp = deepcopy(protB)
-        protBtmp.write_pdbtmp()
-        
 
         listePU = recup_pdb_pu(protA.id, i)
-
         if(not listePU):
             #liste vide si true
             break
 
-        (sumTmA, sumTmB) = (0,0)
-        for pu in listePU:
+        protBtmp = deepcopy(protB)
+        protBtmp.write_pdbtmp()
+        lastAtom, lastChain = write_pdb_align(outPath+"level_"+str(i+1)+".pdb", protBtmp)
 
-            sortie = os.popen("TMalign {} {} -m ../tmp/matrix.txt".format(pu,protBtmp.pathTmp), "r").read()
-            print(sortie)
+        (sumTmA, sumTmB) = (0,0)
+        for numPu, pu in enumerate(listePU):
+
+            sortie = os.popen("TMalign {} {} -m ./tmp/matrix.txt".format(pu,protBtmp.pathTmp), "r").read()
+            logging.info(sortie)
 
             a = Alignement(sortie, i)
 
-            matRot = import_matrix("../tmp/matrix.txt")
-            #print(matRot)
-            #print("-------------------------------------")
-            #print(a.list_alignedA)
-            #print(a.list_alignedB)
-            #print("-------------------------------------")
+            matRot = import_matrix("./tmp/matrix.txt")
 
             puTmp = Protein(pu)
             puTmp.rotate(matRot)
-            #print(puTmp.coord[a.list_alignedA,:])
-            #print(protBtmp.coord[a.list_alignedB,:])
             #addition element par element de tuple
             (sumTmA, sumTmB) = map(lambda x,y: x+y,(sumTmA, sumTmB),sumTermeTM(puTmp, protBtmp, a))
-            #print(sumTmA, sumTmB)
-
+            lastAtom, lastChain = write_pdb_align(outPath+"level_"+str(i+1)+".pdb", puTmp, lastAtom, lastChain, align = a.list_alignedA)
             protBtmp.remove_aligned(a.list_alignedB)
             protBtmp.write_pdbtmp()
 
-        print("\n-------------------------------------\n")
+            file_plot_align(a.list_alignedA, i, numPu, len(protB.seq), puTmp.numRes, protA.numRes, outPath)
         TMscoreA = tm_score(sumTmA, len(protA.seq))
         TMscoreB = tm_score(sumTmB, len(protB.seq))
-        print("level = "+str(i))
-        print("TMscoreA = "+str(TMscoreA))
-        print("TMscoreB= "+str(TMscoreB))
+        file_plot_score(i+1, TMscoreA, TMscoreB, outPath)
+        logging.info("level = "+str(i))
+        logging.info("TMscoreA = "+str(TMscoreA))
+        logging.info("TMscoreB= "+str(TMscoreB))
         i+=1
+
+    os.system("./src/plotAlign.R "+str(i)+" "+str(len(protB.seq))+" "+outPath)
+    os.system("./src/plotTMscore.R "+outPath)
 
 if __name__ == '__main__':
 
-    
-    upalign("../data/1e0s.pdb", "../data/2j5x.pdb")
-    upalign("../data/2j5x.pdb", "../data/1e0s.pdb")
-
-    
-
-
-
-
+    if(len(sys.argv) == 3):
+        if(os.path.isfile(sys.argv[1])):
+            if(os.path.isfile(sys.argv[2])):
+                upalign(sys.argv[1], sys.argv[2])
+                upalign(sys.argv[2], sys.argv[1])
+            else:
+                logging.error("erreur : "+sys.argv[2]+" n'existe pas !\n")
+                exit("erreur : "+sys.argv[2]+" n'existe pas !\n")
+        else:
+            logging.error("erreur : "+sys.argv[1]+" n'existe pas !\n")
+            exit("erreur : "+sys.argv[1]+" n'existe pas !\n")
+    else:
+        logging.error("erreur : nombre d'argument non valide.\n")
+        exit("erreur : nombre d'argument non valide.\n")
 
