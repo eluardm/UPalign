@@ -9,6 +9,33 @@ INFO:root:
  * Please email your comments and suggestions to: zhng@umich.edu          *
  **************************************************************************
 
+Name of Chain_1: ./data/1cdn.pdb                                   
+Name of Chain_2: ./data/1clb.pdb                                   
+Length of Chain_1:   75 residues
+Length of Chain_2:   75 residues
+
+Aligned length=   73, RMSD=   1.85, Seq_ID=n_identical/n_aligned= 0.945
+TM-score= 0.78089 (if normalized by length of Chain_1)
+TM-score= 0.78089 (if normalized by length of Chain_2)
+(You should use TM-score normalized by length of the reference protein)
+
+(":" denotes aligned residue pairs of d < 5.0 A, "." denotes other aligned residues)
+KSPEELKGIFEKYAAKEG-DPNQLSKEELKLLLQTEFPSLLKGGS-TLDELFEELDKNGDGEVSFEEFQVLVKKISQ
+::::::::::::::: :: :::::::::::::::::::::: ::: ::::::::::::.::::::::::::::::::
+KSPEELKGIFEKYAA-KEGDPNQLSKEELKLLLQTEFPSLL-KGGSTLDELFEELDKNGDGEVSFEEFQVLVKKISQ
+
+
+INFO:root:
+ **************************************************************************
+ *                        TM-align (Version 20170708)                     *
+ * An algorithm for protein structure alignment and comparison            *
+ * Based on statistics:                                                   *
+ *       0.0 < TM-score < 0.30, random structural similarity              *
+ *       0.5 < TM-score < 1.00, in about the same fold                    *
+ * Reference: Y Zhang and J Skolnick, Nucl Acids Res 33, 2302-9 (2005)    *
+ * Please email your comments and suggestions to: zhng@umich.edu          *
+ **************************************************************************
+
 Name of Chain_1: ./results/1cdn/in_PU0_1-40                        
 Name of Chain_2: ./tmp/tmp_1clb.pdb                                
 Length of Chain_1:   40 residues
@@ -39,22 +66,25 @@ INFO:root:
 Name of Chain_1: ./results/1cdn/in_PU0_41-75                       
 Name of Chain_2: ./tmp/tmp_1clb.pdb                                
 Length of Chain_1:   35 residues
-Length of Chain_2:   41 residues
+Length of Chain_2:   38 residues
 
-Aligned length=   34, RMSD=   1.93, Seq_ID=n_identical/n_aligned= 0.882
-TM-score= 0.56286 (if normalized by length of Chain_1)
-TM-score= 0.53458 (if normalized by length of Chain_2)
+Aligned length=   32, RMSD=   1.71, Seq_ID=n_identical/n_aligned= 0.969
+TM-score= 0.56094 (if normalized by length of Chain_1)
+TM-score= 0.54731 (if normalized by length of Chain_2)
 (You should use TM-score normalized by length of the reference protein)
 
 (":" denotes aligned residue pairs of d < 5.0 A, "." denotes other aligned residues)
------KGGST--LDELFEELDKNGDGEVSFEEFQVLVKKISQ
-     .: ::  :::::::::::.::::::::::::::::::
-KEGSLLK-GGSTLDELFEELDKNGDGEVSFEEFQVLVKKISQ
+-----KGGS-TLDELFEELDKNGDGEVSFEEFQVLVKKISQ
+     :    ::::::::::::.::::::::::::::::::
+KEGSLG---STLDELFEELDKNGDGEVSFEEFQVLVKKISQ
 
 
 INFO:root:level = 0
-INFO:root:TMscoreA = 0.60657141315
-INFO:root:TMscoreB= 0.74378203703
+INFO:root:TMscoreA = 0.62186128117
+INFO:root:TMscoreB = 0.770339313937
+INFO:root:Nombre alignés = 68
+INFO:root:Pourcentage alignés A = 0.9066666666666666
+INFO:root:Pourcentage alignés B = 0.9066666666666666
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -123,22 +153,52 @@ INFO:root:
 Name of Chain_1: ./results/1cdn/in_PU1_1-23                        
 Name of Chain_2: ./tmp/tmp_1clb.pdb                                
 Length of Chain_1:   23 residues
-Length of Chain_2:   31 residues
+Length of Chain_2:   28 residues
 
 Aligned length=   21, RMSD=   0.90, Seq_ID=n_identical/n_aligned= 0.952
 TM-score= 0.58006 (if normalized by length of Chain_1)
-TM-score= 0.54974 (if normalized by length of Chain_2)
+TM-score= 0.57933 (if normalized by length of Chain_2)
 (You should use TM-score normalized by length of the reference protein)
 
 (":" denotes aligned residue pairs of d < 5.0 A, "." denotes other aligned residues)
-KSPEELKGIFEKYAAKEG--DPNQL--------
-:::::::::::::::  :  :::::        
-KSPEELKGIFEKYAA--KEGDPNQLSLLKGGST
+KSPEELKGIFEKYAAKEG--DPNQL-----
+:::::::::::::::  :  :::::     
+KSPEELKGIFEKYAA--KEGDPNQLSLGST
 
 
 INFO:root:level = 1
-INFO:root:TMscoreA = 0.441403800711
-INFO:root:TMscoreB= 0.709865082404
+INFO:root:TMscoreA = 0.47026422243
+INFO:root:TMscoreB = 0.785849372317
+INFO:root:Nombre alignés = 67
+INFO:root:Pourcentage alignés A = 0.8933333333333333
+INFO:root:Pourcentage alignés B = 0.8933333333333333
+INFO:root:
+ **************************************************************************
+ *                        TM-align (Version 20170708)                     *
+ * An algorithm for protein structure alignment and comparison            *
+ * Based on statistics:                                                   *
+ *       0.0 < TM-score < 0.30, random structural similarity              *
+ *       0.5 < TM-score < 1.00, in about the same fold                    *
+ * Reference: Y Zhang and J Skolnick, Nucl Acids Res 33, 2302-9 (2005)    *
+ * Please email your comments and suggestions to: zhng@umich.edu          *
+ **************************************************************************
+
+Name of Chain_1: ./data/1clb.pdb                                   
+Name of Chain_2: ./data/1cdn.pdb                                   
+Length of Chain_1:   75 residues
+Length of Chain_2:   75 residues
+
+Aligned length=   73, RMSD=   1.85, Seq_ID=n_identical/n_aligned= 0.945
+TM-score= 0.78089 (if normalized by length of Chain_1)
+TM-score= 0.78089 (if normalized by length of Chain_2)
+(You should use TM-score normalized by length of the reference protein)
+
+(":" denotes aligned residue pairs of d < 5.0 A, "." denotes other aligned residues)
+KSPEELKGIFEKYAA-KEGDPNQLSKEELKLLLQTEFPSLL-KGGSTLDELFEELDKNGDGEVSFEEFQVLVKKISQ
+::::::::::::::: :: :::::::::::::::::::::: ::: ::::::::::::.::::::::::::::::::
+KSPEELKGIFEKYAAKEG-DPNQLSKEELKLLLQTEFPSLLKGGS-TLDELFEELDKNGDGEVSFEEFQVLVKKISQ
+
+
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -194,8 +254,11 @@ KEGSLLK-GGSTLDELFEELDKNGDGEVSFEEFQVLVKKISQ
 
 
 INFO:root:level = 0
-INFO:root:TMscoreA = 0.605946006191
-INFO:root:TMscoreB= 0.747943901511
+INFO:root:TMscoreA = 0.619608038955
+INFO:root:TMscoreB = 0.773506291533
+INFO:root:Nombre alignés = 68
+INFO:root:Pourcentage alignés A = 0.9066666666666666
+INFO:root:Pourcentage alignés B = 0.9066666666666666
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -237,17 +300,17 @@ INFO:root:
 Name of Chain_1: ./results/1clb/in_PU1_59-75                       
 Name of Chain_2: ./tmp/tmp_1cdn.pdb                                
 Length of Chain_1:   17 residues
-Length of Chain_2:   65 residues
+Length of Chain_2:   62 residues
 
 Aligned length=   15, RMSD=   0.44, Seq_ID=n_identical/n_aligned= 0.267
 TM-score= 0.64682 (if normalized by length of Chain_1)
-TM-score= 0.22523 (if normalized by length of Chain_2)
+TM-score= 0.23575 (if normalized by length of Chain_2)
 (You should use TM-score normalized by length of the reference protein)
 
 (":" denotes aligned residue pairs of d < 5.0 A, "." denotes other aligned residues)
-GEVSFEEFQVLVKKISQ--------------------------------------------------
-  :::::::::::::::                                                  
---KSPEELKGIFEKYAAKEGDPNQLSKEELKLLLQTEFPSLLKGGSKNGDGEVSFEEFQVLVKKISQ
+GEVSFEEFQVLVKKISQ-----------------------------------------------
+  :::::::::::::::                                               
+--KSPEELKGIFEKYAAKEGDPNQLSKEELKLLLQTEFPSLLKGGSKNGDGEVSFEEFVKKISQ
 
 
 INFO:root:
@@ -264,19 +327,22 @@ INFO:root:
 Name of Chain_1: ./results/1clb/in_PU1_1-40                        
 Name of Chain_2: ./tmp/tmp_1cdn.pdb                                
 Length of Chain_1:   40 residues
-Length of Chain_2:   50 residues
+Length of Chain_2:   47 residues
 
 Aligned length=   24, RMSD=   1.34, Seq_ID=n_identical/n_aligned= 0.958
 TM-score= 0.45068 (if normalized by length of Chain_1)
-TM-score= 0.38454 (if normalized by length of Chain_2)
+TM-score= 0.40285 (if normalized by length of Chain_2)
 (You should use TM-score normalized by length of the reference protein)
 
 (":" denotes aligned residue pairs of d < 5.0 A, "." denotes other aligned residues)
-KSPEELKGIFEKYAAK-EGDPNQLSKEELKLLLQTEFPSLL-------------------------
-               : : ::::::::::::::::::::::                         
----------------KEG-DPNQLSKEELKLLLQTEFPSLLKGGSKNGDGEVSFEEFQVLVKKISQ
+KSPEELKGIFEKYAAK-EGDPNQLSKEELKLLLQTEFPSLL----------------------
+               : : ::::::::::::::::::::::                      
+---------------KEG-DPNQLSKEELKLLLQTEFPSLLKGGSKNGDGEVSFEEFVKKISQ
 
 
 INFO:root:level = 1
-INFO:root:TMscoreA = 0.30877410714
-INFO:root:TMscoreB= 0.578058914993
+INFO:root:TMscoreA = 0.308775991543
+INFO:root:TMscoreB = 0.597161946529
+INFO:root:Nombre alignés = 50
+INFO:root:Pourcentage alignés A = 0.6666666666666666
+INFO:root:Pourcentage alignés B = 0.6666666666666666

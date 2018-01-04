@@ -128,7 +128,7 @@ class Alignement:
         seqA = list(lignes[22])
         motif = list(lignes[23])
         seqB = list(lignes[24])
-        tailleMin = 6
+        tailleMin = 2
         i = 0
         lim = len(motif)
 

@@ -16,4 +16,4 @@ xtick<-seq(0, strtoi(args[2]), by=10)
 axis(side=1, at=xtick, labels = FALSE)
 text(x=xtick, par("usr")[3], labels = xtick, pos = 1, xpd = TRUE)
 
-dev.off()
+invisible(dev.off())

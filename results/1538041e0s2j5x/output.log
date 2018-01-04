@@ -9,6 +9,33 @@ INFO:root:
  * Please email your comments and suggestions to: zhng@umich.edu          *
  **************************************************************************
 
+Name of Chain_1: ./data/1e0s.pdb                                   
+Name of Chain_2: ./data/2j5x.pdb                                   
+Length of Chain_1:  173 residues
+Length of Chain_2:  164 residues
+
+Aligned length=  153, RMSD=   1.86, Seq_ID=n_identical/n_aligned= 0.843
+TM-score= 0.81014 (if normalized by length of Chain_1)
+TM-score= 0.85172 (if normalized by length of Chain_2)
+(You should use TM-score normalized by length of the reference protein)
+
+(":" denotes aligned residue pairs of d < 5.0 A, "." denotes other aligned residues)
+GKVLSKIFGNKEMRILMLGLDAAGKTTILYKLKLGQSVTTIPTV-------GFNVETVTYK----NVKFNVWDVGGQDKIRPLWRHYYTGTQGLIFVVDCADRDRIDEARQELHRIINDREMRDAIILIFANKQDLPDAMKPHEIQEKLGLTRIRDRNWYVQPSCATSGDGLYEGLTWLTSNYK
+         :::::::::::::::::::::::::.                .::::::::.    ::::::::::::. .: ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+---------NKEMRILMLGLDAAGKTTILYKLKLG---------QSVTTIPTVGFNVETVTYKNVKFNVWDVGGQDKI-RP-LWRHYYTGTQGLIFVVDCADRDRIDEARQELHRIINDREMRDAIILIFANKQDLPDAMKPHEIQEKLGLTRIRDRNWYVQPSCATSGDGLYEGLTWLTSNYK
+
+
+INFO:root:
+ **************************************************************************
+ *                        TM-align (Version 20170708)                     *
+ * An algorithm for protein structure alignment and comparison            *
+ * Based on statistics:                                                   *
+ *       0.0 < TM-score < 0.30, random structural similarity              *
+ *       0.5 < TM-score < 1.00, in about the same fold                    *
+ * Reference: Y Zhang and J Skolnick, Nucl Acids Res 33, 2302-9 (2005)    *
+ * Please email your comments and suggestions to: zhng@umich.edu          *
+ **************************************************************************
+
 Name of Chain_1: ./results/1e0s/in_PU0_1-80                        
 Name of Chain_2: ./tmp/tmp_2j5x.pdb                                
 Length of Chain_1:   80 residues
@@ -54,7 +81,10 @@ KLGQSVTTIPYKNVRPQGLIFVVDCADRDRIDEARQELHRIINDREMRDAIILIFANKQDLPDAMKPHEIQEKLGLTRIR
 
 INFO:root:level = 0
 INFO:root:TMscoreA = 0.760554989372
-INFO:root:TMscoreB= 0.8434265403
+INFO:root:TMscoreB = 0.8434265403
+INFO:root:Nombre alignés = 148
+INFO:root:Pourcentage alignés A = 0.8554913294797688
+INFO:root:Pourcentage alignés B = 0.9024390243902439
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -138,7 +168,10 @@ GKVLSKIFGNKEMRILMLGLDAAGKTTILYKLKLGQSVTTIPTV--------GFNVETVTYK----NVKFNVWDVG
 
 INFO:root:level = 1
 INFO:root:TMscoreA = 0.732753001192
-INFO:root:TMscoreB= 0.868560507028
+INFO:root:TMscoreB = 0.868560507028
+INFO:root:Nombre alignés = 150
+INFO:root:Pourcentage alignés A = 0.8670520231213873
+INFO:root:Pourcentage alignés B = 0.9146341463414634
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -207,17 +240,17 @@ INFO:root:
 Name of Chain_1: ./results/1e0s/in_PU2_81-173                      
 Name of Chain_2: ./tmp/tmp_2j5x.pdb                                
 Length of Chain_1:   93 residues
-Length of Chain_2:  141 residues
+Length of Chain_2:  136 residues
 
-Aligned length=   84, RMSD=   0.74, Seq_ID=n_identical/n_aligned= 1.000
-TM-score= 0.86873 (if normalized by length of Chain_1)
-TM-score= 0.58067 (if normalized by length of Chain_2)
+Aligned length=   79, RMSD=   0.74, Seq_ID=n_identical/n_aligned= 1.000
+TM-score= 0.81738 (if normalized by length of Chain_1)
+TM-score= 0.56581 (if normalized by length of Chain_2)
 (You should use TM-score normalized by length of the reference protein)
 
 (":" denotes aligned residue pairs of d < 5.0 A, "." denotes other aligned residues)
 ---------------------------------------------------------QGLIFVVDCADRDRIDEARQELHRIINDREMRDAIILIFANKQDLPDAMKPHEIQEKLGLTRIRDRNWYVQPSCATSGDGLYEGLTWLTSNYK
-                                                         ::::::::::::::::::         ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-NKEMRILMLGLGQSVTTIPTVGFNVETVTYKNVKFNVWDVGGQDKIRPLWRHYYTGTQGLIFVVDCADRDRIDEA---------DREMRDAIILIFANKQDLPDAMKPHEIQEKLGLTRIRDRNWYVQPSCATSGDGLYEGLTWLTSNYK
+                                                         ::::::::::::::::::         ::::     :::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+NKEMRILMLGLGQSVTTIPTVGFNVETVTYKNVKFNVWDVGGQDKIRPLWRHYYTGTQGLIFVVDCADRDRIDEA---------DREM-----LIFANKQDLPDAMKPHEIQEKLGLTRIRDRNWYVQPSCATSGDGLYEGLTWLTSNYK
 
 
 INFO:root:
@@ -275,8 +308,11 @@ G------------------------QDKIRPLWRHYYTGT
 
 
 INFO:root:level = 2
-INFO:root:TMscoreA = 0.618520574887
-INFO:root:TMscoreB= 0.823572002503
+INFO:root:TMscoreA = 0.59165626657
+INFO:root:TMscoreB = 0.817020087844
+INFO:root:Nombre alignés = 140
+INFO:root:Pourcentage alignés A = 0.8092485549132948
+INFO:root:Pourcentage alignés B = 0.8536585365853658
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -468,7 +504,37 @@ GKVLSKIFGNKEMRILMLGL-------------
 
 INFO:root:level = 3
 INFO:root:TMscoreA = 0.659428534669
-INFO:root:TMscoreB= 0.892689860389
+INFO:root:TMscoreB = 0.892689860389
+INFO:root:Nombre alignés = 151
+INFO:root:Pourcentage alignés A = 0.8728323699421965
+INFO:root:Pourcentage alignés B = 0.9207317073170732
+INFO:root:
+ **************************************************************************
+ *                        TM-align (Version 20170708)                     *
+ * An algorithm for protein structure alignment and comparison            *
+ * Based on statistics:                                                   *
+ *       0.0 < TM-score < 0.30, random structural similarity              *
+ *       0.5 < TM-score < 1.00, in about the same fold                    *
+ * Reference: Y Zhang and J Skolnick, Nucl Acids Res 33, 2302-9 (2005)    *
+ * Please email your comments and suggestions to: zhng@umich.edu          *
+ **************************************************************************
+
+Name of Chain_1: ./data/2j5x.pdb                                   
+Name of Chain_2: ./data/1e0s.pdb                                   
+Length of Chain_1:  164 residues
+Length of Chain_2:  173 residues
+
+Aligned length=  153, RMSD=   1.86, Seq_ID=n_identical/n_aligned= 0.843
+TM-score= 0.85172 (if normalized by length of Chain_1)
+TM-score= 0.81014 (if normalized by length of Chain_2)
+(You should use TM-score normalized by length of the reference protein)
+
+(":" denotes aligned residue pairs of d < 5.0 A, "." denotes other aligned residues)
+---------NKEMRILMLGLDAAGKTTILYKLKLGQSVTTIP---------TVGFNVETVTYKNVKFNVWDVGGQDKI-RP-LWRHYYTGTQGLIFVVDCADRDRIDEARQELHRIINDREMRDAIILIFANKQDLPDAMKPHEIQEKLGLTRIRDRNWYVQPSCATSGDGLYEGLTWLTSNYK
+         :::::::::::::::::::::::::.                .::::::::.    ::::::::::::. .: ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+GKVLSKIFGNKEMRILMLGLDAAGKTTILYKLKLG-------QSVTTIPTVGFNVETVTYK----NVKFNVWDVGGQDKIRPLWRHYYTGTQGLIFVVDCADRDRIDEARQELHRIINDREMRDAIILIFANKQDLPDAMKPHEIQEKLGLTRIRDRNWYVQPSCATSGDGLYEGLTWLTSNYK
+
+
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -525,7 +591,10 @@ GKVLSKIFGKLGQSVTTIPTVKIRPQGLIFVVDCADRDRIDEARQELHRIINDREMRDAIILIFANKQDLPDAMKPHEIQ
 
 INFO:root:level = 0
 INFO:root:TMscoreA = 0.794304880994
-INFO:root:TMscoreB= 0.801634356835
+INFO:root:TMscoreB = 0.801634356835
+INFO:root:Nombre alignés = 148
+INFO:root:Pourcentage alignés A = 0.9024390243902439
+INFO:root:Pourcentage alignés B = 0.8554913294797688
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -609,7 +678,10 @@ GKVLSKIFGNKEMRILMLGLDAAGKTTILYKLKLG--------QSVTTIPTVGFNVETVTYK----NVKFNVWDVG
 
 INFO:root:level = 1
 INFO:root:TMscoreA = 0.765275082943
-INFO:root:TMscoreB= 0.825141636751
+INFO:root:TMscoreB = 0.825141636751
+INFO:root:Nombre alignés = 150
+INFO:root:Pourcentage alignés A = 0.9146341463414634
+INFO:root:Pourcentage alignés B = 0.8670520231213873
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -747,7 +819,10 @@ GKVLSKIFGKLGQSVTTIPTVVGAIILIFANKQDLPDAMKPHEIQEKLGLTRIRDRNWYVQPSCATSGDGLYEGLTWLTS
 
 INFO:root:level = 2
 INFO:root:TMscoreA = 0.690973298776
-INFO:root:TMscoreB= 0.827465803231
+INFO:root:TMscoreB = 0.827465803231
+INFO:root:Nombre alignés = 150
+INFO:root:Pourcentage alignés A = 0.9146341463414634
+INFO:root:Pourcentage alignés B = 0.8670520231213873
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -939,7 +1014,10 @@ GKVLSKIFGKLGQSVTTIPTVVGAIILIFANKQDLPDAM
 
 INFO:root:level = 3
 INFO:root:TMscoreA = 0.572479078145
-INFO:root:TMscoreB= 0.829782419312
+INFO:root:TMscoreB = 0.829782419312
+INFO:root:Nombre alignés = 150
+INFO:root:Pourcentage alignés A = 0.9146341463414634
+INFO:root:Pourcentage alignés B = 0.8670520231213873
 INFO:root:
  **************************************************************************
  *                        TM-align (Version 20170708)                     *
@@ -1158,4 +1236,7 @@ GKVLSKIFGKLGQSVTTIPTVGGTNWYVQPSCATSGDGLYEGLTWLTSNYK
 
 INFO:root:level = 4
 INFO:root:TMscoreA = 0.523735884673
-INFO:root:TMscoreB= 0.834373793562
+INFO:root:TMscoreB = 0.834373793562
+INFO:root:Nombre alignés = 149
+INFO:root:Pourcentage alignés A = 0.9085365853658537
+INFO:root:Pourcentage alignés B = 0.861271676300578
