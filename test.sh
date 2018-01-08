@@ -1,1 +1,1 @@
-./src/upalign.py "./data/1e0s.pdb" "./data/2j5x.pdb"
+./src/upalign.py "./data/1a03.pdb" "./data/1cnp.pdb"

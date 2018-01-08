@@ -10,7 +10,7 @@ for(i in seq(1,strtoi(args[1]))){
 	mat = rbind(mat,matTMP)
 }
 
-svg(filename=paste(args[3],"plotAlign.svg"),width=15,height=5,bg='transparent')
+svg(filename=paste(args[3],"plotAlign.svg"),width=10,height=4,bg='transparent')
 plot(x=mat$Residus, y=mat$Level, pch=15, xlim=c(0,strtoi(args[2])), col=mat$NumPU, xlab="Residus", ylab="Level", xaxt="n")
 xtick<-seq(0, strtoi(args[2]), by=10)
 axis(side=1, at=xtick, labels = FALSE)

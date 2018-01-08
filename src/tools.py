@@ -35,6 +35,17 @@ DICOAA = {
 }
 
 class Protein:
+    """
+    id = nom du fichier pdb.
+    path = chemin vers le fichier pdb.
+    pathTmp = chemin vers les pdb temporaires.
+    seq = sequence en code 1 lettre.
+    pdb = contenu des lignes ATOM
+    numRes = liste des numéros des résidus. 
+                Utile car la numérotation n'est pas la meme dans les fichiers générés par 
+                Protein Peeling.
+    coord = matrice des coordonées de tous les atomes.
+    """
     id = ''
     path = ''
     seq = ""
@@ -79,7 +90,8 @@ class Protein:
             exit(1)
 
     def read_seq(self):
-        #Ne lit que la chaine A pour le moment.
+        """Lit et convertie la séquence en code 1 lettre à partir de self.pdb
+        """
         numRes = 0
         for ligne in self.pdb:
             if ligne[0:3] == 'TER':
@@ -92,10 +104,14 @@ class Protein:
         return "".join(self.pdb)
 
     def write_pdbtmp(self):
+        """Ecrit les fichier pdb temporaires dont des résidus ont été supprimés.
+        """
         with open("./tmp/tmp_"+self.id+".pdb","w") as fOut:
             fOut.write(self.get_pdb())
 
     def rotate(self, matrix):
+        """Effectue une rotation des atomes selon la matrice de rotation matrix
+        """
         newCoord = np.zeros(self.coord.shape)
         newCoord[:,0]=matrix[0,0]+matrix[0,1]*self.coord[:,0]+matrix[0,2]*self.coord[:,1]+matrix[0,3]*self.coord[:,2]
         newCoord[:,1]=matrix[1,0]+matrix[1,1]*self.coord[:,0]+matrix[1,2]*self.coord[:,1]+matrix[1,3]*self.coord[:,2]
@@ -103,6 +119,8 @@ class Protein:
         self.coord = deepcopy(newCoord)
 
     def remove_aligned(self, aligned):
+        """Supprime les résidus alignés de pdb et coord.
+        """
         pdbtmp = []
         coordtmp = []
         i = 0
@@ -120,7 +138,10 @@ class Protein:
         self.coord = deepcopy(np.asarray(coordtmp))
 
 class Alignement:
-
+    """Contient les information relatives à l'alignement d'une Unité Protéique.
+    outAlign est la sortie de TM-align.
+    list_alignedA/B = numéros des résidus alignés sur la prtéine A et B.
+    """
     def __init__(self, outAlign, i):
         self.list_alignedA = []
         self.list_alignedB = []
@@ -148,11 +169,16 @@ class Alignement:
         self.long = len(self.list_alignedA)
 
 def recup_pdb_pu(id, i):
+    """Récupere la liste des fichiers pdb des UP.
+
+    """
     file1 = glob.glob('./results/{}/*'.format(id))
     file2 = [fichier for fichier in file1 if(basename(fichier).startswith('in_PU'+str(i)) and not basename(fichier).endswith('.png'))]
     return file2
 
 def import_matrix(fileMatrix):
+    """Import la matrice de rotation de TM-align.
+    """
     with open(fileMatrix) as fMat:
         matrix = np.zeros((3,4))
         for ligne in fMat:
@@ -161,6 +187,9 @@ def import_matrix(fileMatrix):
     return deepcopy(matrix)
 
 def sumTermeTM(protA, protB, align):
+    """Calcul la somme du TM-score à partir des résidus alignés
+
+    """
     i = 0
 
     lTargetA = len(protA.seq)
@@ -183,9 +212,13 @@ def sumTermeTM(protA, protB, align):
     return sumTmA, sumTmB
 
 def tm_score(somme, l):
+    """Calcul le tm-score à partir de la somme précédement calculée et de la longueur de la protéine.
+    """
     return(somme/l)
 
 def get_coordCA(pdb,coord, res):
+    """Récupère les coordonées des carbone alpha pour le calcul du tm-score.
+    """
     i = 1
     ca = []
     cp = 0
@@ -198,9 +231,15 @@ def get_coordCA(pdb,coord, res):
     return deepcopy(np.asarray(ca))
 
 def dist3D(coord1, coord2):
+    """Distance 3D euclidienne.
+    """
     return(np.linalg.norm(coord1-coord2))
 
 def write_pdb_align(fileName, prot, lastAtom = 0, lastChain = 64, align = None):
+    """Ecrit les fichier PDB des alignement entre les résidus alignés des UP 
+    et la structure complète de la protéine B.
+    lastAtom et last chain permettent de faire suivre les numeros d'atomes et de chaine.
+    """
     with open(fileName,"a") as fOut:
         lastAtomTmp = 0
         for ind, ligne in enumerate(prot.pdb):
@@ -219,6 +258,8 @@ def write_pdb_align(fileName, prot, lastAtom = 0, lastChain = 64, align = None):
     return(lastAtomTmp, lastChain+1)
 
 def file_plot_score(level, tmA, tmb, outPath):
+    """Ecrit le fichier de données pour construire le plot du TM-score sous R.
+    """
     with open(outPath+"plotTMscore.dat","a") as fOut:
         if(level == 0):
             fOut.write("Level\tTM-scoreA\t TM-scoreB\n")
@@ -227,6 +268,8 @@ def file_plot_score(level, tmA, tmb, outPath):
 
 def file_plot_align(aligned, level, numPu, xlim, numRes, numResInit, outPath):
     '''
+    Ecrit le fichier de données pour construire le plot des alignement des PU sous R.
+
     numResInit = numero des résidu dans le pdb initial car le num des residu dans le pdb des pu n'est pas le mème car résidus manquant ignorés.
     Le plot des résidus alignés doit se faire selon la numérotation initial.
     '''

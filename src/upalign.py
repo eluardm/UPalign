@@ -91,7 +91,6 @@ if __name__ == '__main__':
         if(os.path.isfile(sys.argv[1])):
             if(os.path.isfile(sys.argv[2])):
                 upalign(sys.argv[1], sys.argv[2])
-                sleep(1)
                 upalign(sys.argv[2], sys.argv[1])
             else:
                 logging.error("erreur : "+sys.argv[2]+" n'existe pas !\n")
