@@ -11,7 +11,7 @@ Pour chacunes des 2 protéines à aligner :
 4 - Les resulats se trouvent dans les dossier "date+protA+protB" et "date+protB+protA" dans /results
 
 Exemple de commande :
-./src/upalign.py "./data/1a03.pdb" "./data/1cnp.pdb"
+./src/upalign.py "./data/1cll.pdb" "./data/1cdl.pdb"
 
 
 
